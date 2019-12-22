@@ -27,7 +27,7 @@ namespace SportsStore.Tests
             ProductController controller = new ProductController(mock.Object);
             controller.PageSize = 3;
             // Act            
-            IEnumerable<Product> result =  controller.List(2).ViewData.Model as IEnumerable<Product>;
+            IEnumerable<Product> result =  controller.List("Soccer",2).ViewData.Model as IEnumerable<Product>;
             // Assert            
             Product[] prodArray = result.ToArray();            
             Assert.True(prodArray.Length == 2);            
