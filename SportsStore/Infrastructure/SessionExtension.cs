@@ -11,12 +11,21 @@ namespace SportsStore.Infrastructure
     {
         public static void SetJson(this ISession session, string key, object value)
         {
-            session.SetString(key, JsonConvert.SerializeObject(value));
+            JsonSerializerSettings jsSettings = new JsonSerializerSettings();
+            jsSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            session.SetString(key, JsonConvert.SerializeObject(value,jsSettings));
         }
         public static T GetJson<T>(this ISession session, string key)
         {
-            var sessionData = session.GetString(key);
-            return sessionData == null ? default(T) : JsonConvert.DeserializeObject<T>(sessionData);
+            var sessionData = session.Get(key);
+            if (sessionData == null) {
+                return default(T);
+            }
+            else
+            {
+                string json = System.Text.Encoding.UTF8.GetString(sessionData);
+                return JsonConvert.DeserializeObject<T>(json);
+            }
         }
     }
 }
